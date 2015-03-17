@@ -1,0 +1,103 @@
+---
+title       : Designing A More Efficient Car
+subtitle    : Developing Data Products
+author      : Brown
+job         : Course Project
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Overview
+
+The mtcars dataset in R was extracted from the 1974 Motor Trend US magazine, and comprises fuel consumption and 10 aspects of automobile design and performance for 32 automobiles (1973-74 models).
+
+Using data available in the mtcars dataset, this application trains and uses a linear model 
+to help predict car performance based on options selected.
+
+The application also produces a summary of specifications.
+
+---
+## About mtcars
+By observing plotted data from mtcars, we can see that cars with more cylinders tend to have
+more horse power, but achieve lower miles per gallon. We can also see that manual transmissions
+tend to have better mileage than automatics.
+
+```{r echo=F}
+par(mfcol=c(1,2))
+plot(mtcars$mpg,mtcars$hp,col=mtcars$cyl,pch=19,
+  main="MPG v HP by cylinder",
+  xlab="Miles per gallon",
+  ylab="Horsepower",
+  xlim=c(5,35),
+  ylim=c(70,250),
+  asp=.5
+)
+lines(c(mean(mtcars$mpg),mean(mtcars$mpg)),c(0,300),col="red")
+lines(c(0,300),c(mean(mtcars$hp),mean(mtcars$hp)),col="blue")
+
+plot(mtcars$mpg,mtcars$hp,col=mtcars$am+2,pch=19,
+  main="MPG v HP by transmission type",
+  xlab="Miles per gallon",
+  ylab="Horsepower",
+  xlim=c(5,35),
+  ylim=c(70,250),
+  asp=.5
+)
+lines(c(mean(mtcars$mpg),mean(mtcars$mpg)),c(0,300),col="red")
+lines(c(0,300),c(mean(mtcars$hp),mean(mtcars$hp)),col="blue")
+```
+
+
+---
+## About the prediction model
+
+The key factors to the mileage model are:
+
+1. The number of cylinders (cyl)
+2. The type of transmission (am)
+3. The car weight (wt)
+4. The engine displacement (disp)
+
+The model is defined as: lm(mpg~cyl+am+wt+disp,data=mtcars)
+
+The key factors to the horsepower model are:
+
+1. The number of cylinders (cyl)
+2. The engine displacement (disp)
+
+The model is defined as: lm(hp~cyl+disp,data=mtcars)
+
+---
+## Using the app
+
+By manipulating the configuration options on the left, you can see how they will impact car performance. The model will predict how your car performs relative to the other cars in the mtcars dataset as indicated by a red dot.
+
+```{r echo=F}
+plot(
+  30,
+  160,
+  xlab="Miles per gallon",
+  ylab="Horsepower",
+  main="Your car's performance versus the other mtcars",
+  col="red",
+  cex=3,
+  pch=20,
+  xlim=c(5,35),
+  ylim=c(70,250)
+)
+legend(4,235,c("Mean MPG","Mean HP","Your car","4 Cyl","6 Cyl","8 Cyl"),title="All mtcars")
+lines(c(4.3,5),c(219,219),col="red")
+lines(c(4.3,5),c(212,212),col="blue")
+lines(c(mean(mtcars$mpg),mean(mtcars$mpg)),c(0,300),col="red")
+lines(c(0,300),c(mean(mtcars$hp),mean(mtcars$hp)),col="blue")
+points(mtcars$mpg,mtcars$hp,col=mtcars$cyl,pch=19)
+points(4.7,204,col="red",cex=3,pch=20)
+points(4.7,198,col=4,pch=19)
+points(4.7,190,col=6,pch=19)
+points(4.7,182,col=8,pch=19)
+```
+Use the app: https://ibanezplayer.shinyapps.io/CarDesign/
